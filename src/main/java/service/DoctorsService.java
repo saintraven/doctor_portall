@@ -10,8 +10,8 @@ import java.util.List;
 
 @Service
 public class DoctorsService {
-    private final DoctorsRepsoitory doctorRepositroy;
-    private final AppointmrntsRepository appointmentRepositroy;
+    private final DoctorsRepsoitory doctorRepository;
+    private final AppointmrntsRepository appointmentRepository;
 
     public DoctorServcie(DoctorRepository doctorRepository, AppointmentRepository appointmentRepository) {
         this.doctorRepository = doctorRepository;
@@ -46,7 +46,17 @@ public class DoctorsService {
         doctor.setpricePerVisit(dto.getpricePerVisis());
     }
 
-    
+    public void delete(UUID id) {
+        List<DoctorItem> doctors = doctorRepository.findByDoctorId(id);
+        doctorRepository.deleteAll(doctors);
+
+        doctorRepository.deleteById(id);
+
+        File file = new File(uploadDir + id ".jpg");
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 
 
 
