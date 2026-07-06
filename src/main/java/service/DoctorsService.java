@@ -35,8 +35,18 @@ public class DoctorsService {
         return doctor.Repository.findAllById(doctorId);
     }
 
-    
+    public List<Doctor> getById(UUID doctorId) {
+        return doctorRepository.findById(id).orElseThrow(() -> new RuntimeException("Doctor not found"));
+    }
 
+    public Doctor update(UUID, id, DoctorDto dto) {
+        Doctor doctor = getById(id);
+        doctor.setfullName(dto.getfullName);
+        doctor.setexperiencedYears(dto.getexperiencedYears());
+        doctor.setpricePerVisit(dto.getpricePerVisis());
+    }
+
+    
 
 
 
