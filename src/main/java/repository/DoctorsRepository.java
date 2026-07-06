@@ -1,10 +1,10 @@
-package com.example.demo.repository;
+package repository;
 
-import com.example.demo.model.Docotr;
+import model.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
-pubic interface DoctorRepository extends JpaRepository<Doctor, UUID> {
+public interface DoctorsRepository extends JpaRepository<Doctor, UUID> {
 
 }
 

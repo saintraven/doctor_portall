@@ -1,6 +1,6 @@
-package com.artyzh.dto;
+package dto;
 
-import com.artyzh.model.Status;
+import model.Status;
 
 import lombok.Getter;
 import lombok.Setter;

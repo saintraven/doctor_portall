@@ -1,4 +1,4 @@
-package com.artyzh.dto;
+package dto;
 
 import lombok.Getter;
 import lombok.Setter;

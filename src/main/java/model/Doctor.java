@@ -1,4 +1,4 @@
-package com.artyzh.model;
+package model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

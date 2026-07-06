@@ -1,56 +1,50 @@
-package com.example.demo
+package service;
 
 import org.springframework.stereotype.Service;
-import com.example.demo.repository.DoctorRepository;
-import com.example.demo.repository.AppointmentRepository;
+import repository.DoctorsRepository;
+import repository.AppointmentRepository;
+import model.Doctor;
+import dto.DoctorDto;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DoctorsService {
-    private final DoctorsRepsoitory doctorRepositroy;
-    private final AppointmrntsRepository appointmentRepositroy;
+    private final DoctorsRepository doctorRepository;
+    private final AppointmentRepository appointmentRepositroy;
 
-    public DoctorServcie(DoctorRepository doctorRepository, AppointmentRepository appointmentRepository) {
+    public DoctorsService(DoctorsRepository doctorRepository, AppointmentRepository appointmentRepository) {
         this.doctorRepository = doctorRepository;
         this.appointmentRepositroy = appointmentRepository;
     }
 
     public Doctor create(DoctorDto dto) {
-        Doctor category = doctorRepository.findById(dto.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
         Doctor doctor = new Doctor();
-        Doctor.setId(UUID.randomUUID());
-        Doctor.setfullName(dto.getfullName);
-        Doctor.setspeciality(dto.getspeciality());
-        Doctor.setexperiencedYears(dto.getexperiencedYears());
-        Doctor.setpricePerVisit(dto.getpricePerVisit());
-        Doctor.setimageUrl(dto.getimageURL);
+        doctor.setId(UUID.randomUUID());
+        doctor.setFullName(dto.getFullName());
+        doctor.setSpeciality(dto.getSpeciality());
+        doctor.setExperiencedYears(dto.getExperienceYears());
+        doctor.setPricePerVisit(dto.getPricePerVisit());
+        return doctor;
     }
 
-
-    public List<Doctor> getdAllById(UUID doctorId) {
-        return doctor.Repository.findAllById(doctorId);
+    public List<Doctor> getdAllById() {
+        return doctorRepository.findAll();
     }
 
-    public List<Doctor> getById(UUID doctorId) {
-        return doctorRepository.findById(id).orElseThrow(() -> new RuntimeException("Doctor not found"));
+    public Doctor getById(UUID doctorId) {
+        return doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
     }
 
-    public Doctor update(UUID, id, DoctorDto dto) {
+    public Doctor update(UUID id, DoctorDto dto) {
         Doctor doctor = getById(id);
-        doctor.setfullName(dto.getfullName);
-        doctor.setexperiencedYears(dto.getexperiencedYears());
-        doctor.setpricePerVisit(dto.getpricePerVisis());
+        doctor.setFullName(dto.getFullName());
+        doctor.setExperiencedYears(dto.getExperienceYears());
+        doctor.setPricePerVisit(dto.getPricePerVisit());
+        return doctorRepository.save(doctor);
     }
-
-    
-
-
-
-
 
 }
-
