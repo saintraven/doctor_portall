@@ -18,7 +18,7 @@ public class DoctorsService {
         this.appointmentRepositroy = appointmentRepository;
     }
 
-    public Doctor create(CreateDto dto) {
+    public Doctor create(DoctorDto dto) {
         Doctor category = doctorRepository.findById(dto.getDoctorId())
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
         Doctor doctor = new Doctor();
@@ -34,6 +34,9 @@ public class DoctorsService {
     public List<Doctor> getdAllById(UUID doctorId) {
         return doctor.Repository.findAllById(doctorId);
     }
+
+    
+
 
 
 
