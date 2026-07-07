@@ -7,6 +7,9 @@ import com.artyzh.doctorportall.repository.AppointmentsRepository;
 import com.artyzh.doctorportall.model.Doctor;
 import com.artyzh.doctorportall.dto.DoctorDto;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +47,30 @@ public class DoctorsService {
         doctor.setExperiencedYears(dto.getExperienceYears());
         doctor.setPricePerVisit(dto.getPricePerVisit());
         return doctorRepository.save(doctor);
+    }
+
+    // добавлено для работы миграции
+    public void delete(UUID id) {
+        doctorRepository.deleteById(id);
+    }
+
+    // добавлено для работы миграции
+    public void saveImage(UUID id, byte[] image) throws IOException {
+        Doctor doctor = getById(id);
+        Path imageFile = Path.of("images", doctor.getId() + ".png");
+        Files.createDirectories(imageFile.getParent());
+        Files.write(imageFile, image);
+        doctor.setImageUrl(imageFile.toString());
+        doctorRepository.save(doctor);
+    }
+
+    // добавлено для работы миграции
+    public byte[] getImage(UUID id) throws IOException {
+        Doctor doctor = getById(id);
+        if (doctor.getImageUrl() == null) {
+            throw new RuntimeException("Image not found");
+        }
+        return Files.readAllBytes(Path.of(doctor.getImageUrl()));
     }
 
 }
