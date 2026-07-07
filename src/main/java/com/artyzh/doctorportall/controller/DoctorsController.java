@@ -3,10 +3,8 @@ package com.artyzh.doctorportall.controller;
 import com.artyzh.doctorportall.model.Appointment;
 import com.artyzh.doctorportall.model.Doctor;
 import com.artyzh.doctorportall.dto.DoctorDto;
-import com.artyzh.doctorportall.repository.AppointmentsRepository;
-import com.artyzh.doctorportall.repository.DoctorsRepository;
-import com.artyzh.doctorportall.service.DoctorsService;
 import com.artyzh.doctorportall.service.AppointmentsService;
+import com.artyzh.doctorportall.service.DoctorsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,18 +14,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/doctors")
 public class DoctorsController {
-    private final DoctorsRepository doctorsRepository;
-    private final AppointmentsRepository appointmentsRepository;
+    private final AppointmentsService appointmentsService;
     private final DoctorsService doctorsService;
 
-    public DoctorsController(DoctorsRepository doctorsRepository, AppointmentsRepository appointmentsRepository, DoctorsService doctorsService) {
-        this.doctorsRepository = doctorsRepository;
-        this.appointmentsRepository = appointmentsRepository;
+    public DoctorsController(AppointmentsService appointmentsService, DoctorsService doctorsService) {
+        this.appointmentsService = appointmentsService;
         this.doctorsService = doctorsService;
     }
 
@@ -75,6 +70,6 @@ public class DoctorsController {
 
     @GetMapping("/{doctor_id}/appointments")
     public ResponseEntity<List<Appointment>> getAppointments(@PathVariable("doctor_id") UUID id) {
-        return ResponseEntity.ok(appointmentsRepository.getByDoctorId(id));
+        return ResponseEntity.ok(appointmentsService.getByDoctor(id));
     }
 }
