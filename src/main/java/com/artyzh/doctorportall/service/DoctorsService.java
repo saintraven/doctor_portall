@@ -8,6 +8,7 @@ import com.artyzh.doctorportall.repository.AppointmentsRepository;
 import com.artyzh.doctorportall.model.Doctor;
 import com.artyzh.doctorportall.dto.DoctorDto;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,7 +54,14 @@ public class DoctorsService {
 
     // добавлено для работы миграции
     public void delete(UUID id) {
+        List<Appointment> appointments = appointmentRepository.getByDoctorId(id);
+        appointmentRepository.deleteAll(appointments);
         doctorRepository.deleteById(id);
+
+        File file = new File(uploadDir + id, ".jpg");
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     // добавлено для работы миграции
