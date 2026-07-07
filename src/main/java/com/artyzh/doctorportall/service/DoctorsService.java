@@ -1,6 +1,6 @@
 package com.artyzh.doctorportall.service;
 
-import jakarta.transaction.Transactional;
+import com.artyzh.doctorportall.model.Appointment;
 import org.springframework.stereotype.Service;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
@@ -36,7 +36,7 @@ public class DoctorsService {
         return doctor;
     }
 
-    public List<Doctor> getdAllById() {
+    public List<Doctor> getAll() {
         return doctorRepository.findAll();
     }
 
