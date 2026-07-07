@@ -1,4 +1,4 @@
-package model;
+package com.artyzh.doctorportall.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
