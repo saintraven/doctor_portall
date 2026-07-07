@@ -4,10 +4,12 @@ import com.artyzh.doctorportall.dto.AppointmentDto;
 import com.artyzh.doctorportall.model.Appointment;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class AppointmentsService {
     private final DoctorsRepository doctorRepository;
     private final AppointmentsRepository appointmentRepository;
@@ -18,6 +20,7 @@ public class AppointmentsService {
     }
 
     public Appointment create(AppointmentDto dto) {
+        // TODO: checker of collision
         Appointment appointment = new Appointment();
         appointment.setId(UUID.randomUUID());
         appointment.setDoctor(doctorRepository.getById(dto.getDoctorId()));
