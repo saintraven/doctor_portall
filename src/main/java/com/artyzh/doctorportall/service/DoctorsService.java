@@ -1,19 +1,24 @@
-package com.example.demo;
+package com.artyzh.doctorportall.service;
 
+import com.artyzh.doctorportall.dto.DoctorDto;
+import com.artyzh.doctorportall.model.Doctor;
+import com.artyzh.doctorportall.repository.DoctorsRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import com.example.demo.repository.DoctorsRepository;
-import com.example.demo.repository.AppointmentRepository;
+
+import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DoctorsService {
-    private final DoctorsRepsoitory doctorRepository;
-    private final AppointmrntsRepository appointmentRepository;
+    private final DoctorsRepository doctorRepository;
+    private final AppointmentsRepository appointmentRepository;
 
-    public DoctorsServcie(DoctorsRepository doctorRepository, AppointmentRepository appointmentRepository) {
+    public DoctorsService(DoctorsRepository doctorRepository, AppointmentRepository appointmentRepository) {
         this.doctorRepository = doctorRepository;
         this.appointmentRepositroy = appointmentRepository;
     }
@@ -22,17 +27,17 @@ public class DoctorsService {
         Doctor category = doctorRepository.findById(dto.getDoctorId())
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
         Doctor doctor = new Doctor();
-        Doctor.setId(UUID.randomUUID());
-        Doctor.setfullName(dto.getfullName);
-        Doctor.setspeciality(dto.getspeciality());
-        Doctor.setexperiencedYears(dto.getexperiencedYears());
-        Doctor.setpricePerVisit(dto.getpricePerVisit());
-        Doctor.setimageUrl(dto.getimageURL);
+        doctor.setId(UUID.randomUUID());
+        doctor.setFullName(dto.getFullName);
+        doctor.setSpeciality(dto.getSpeciality());
+        doctor.setExperiencedYears(dto.getExperiencedYears());
+        doctor.setPricePerVisit(dto.getPricePerVisit());
+        doctor.setImageUrl(dto.getImageURL);
     }
 
 
     public List<Doctor> getdAllById(UUID doctorId) {
-        return doctor.Repository.findAllById(doctorId);
+        return Doctors.Repository.findAllById(doctorId);
     }
 
     public List<Doctor> getById(UUID doctorId) {
@@ -41,9 +46,9 @@ public class DoctorsService {
 
     public Doctor update(UUID, id, DoctorDto dto) {
         Doctor doctor = getById(id);
-        doctor.setfullName(dto.getfullName);
-        doctor.setexperiencedYears(dto.getexperiencedYears());
-        doctor.setpricePerVisit(dto.getpricePerVisis());
+        doctor.setFullName(dto.getFullName);
+        doctor.setExperiencedYears(dto.getExperiencedYears());
+        doctor.setPricePerVisit(dto.getPricePerVisis());
     }
 
     @Transactional
@@ -59,6 +64,9 @@ public class DoctorsService {
         }
     }
 
+    public Doctor update(UUID, id, DoctorDto){
+
+    }
 
 
 

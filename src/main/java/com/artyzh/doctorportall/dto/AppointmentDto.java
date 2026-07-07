@@ -1,6 +1,6 @@
-package com.artyzh.dto;
+package com.artyzh.doctorportall.dto;
 
-import com.artyzh.model.Status;
+import com.artyzh.doctorportall.model.Status;
 
 import lombok.Getter;
 import lombok.Setter;
