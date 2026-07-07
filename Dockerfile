@@ -20,14 +20,6 @@ COPY --from=build /app/build/libs/*.jar app.jar
 
 USER appuser
 
-ENTRYPOINT ["java", \
-    "-XX:UseContainerSupport", \
-    "-XX:MaxRAMPercentage=70.0", \
-    "-XX:InitialRAMPercentage=50.0", \
-    "-XX:+UseParallelGC", \
-    "-XX:ParallelGCThreads=4", \
-    "-XX:+UseCompressOops", \
-    "-XX:+UseCompressedClassPointers", \
-    "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
 
