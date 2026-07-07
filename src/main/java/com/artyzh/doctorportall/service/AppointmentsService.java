@@ -33,7 +33,7 @@ public class AppointmentsService {
         return appointment;
     }
 
-    public List<Appointment> getdAll() {
+    public List<Appointment> getAll() {
         return appointmentRepository.findAll();
     }
 
