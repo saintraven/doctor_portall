@@ -54,7 +54,7 @@ public class DoctorsController {
 
     @PutMapping(value = "/{doctor_id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadImage(@PathVariable("doctor_id") UUID id, @RequestParam("file") MultipartFile file) throws IOException {
-        doctorsService.saveImage(id, file.getBytes());
+        doctorsService.uploadImage(id, file.getBytes());
         return ResponseEntity.ok().build();
     }
 

@@ -1,6 +1,7 @@
 package com.artyzh.doctorportall.service;
 
 import com.artyzh.doctorportall.model.Appointment;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
@@ -55,7 +56,7 @@ public class DoctorsService {
     }
 
     // добавлено для работы миграции
-    public void saveImage(UUID id, byte[] image) throws IOException {
+    public void uploadImage(UUID id, byte[] image) throws IOException {
         Doctor doctor = getById(id);
         Path imageFile = Path.of("images", doctor.getId() + ".png");
         Files.createDirectories(imageFile.getParent());
