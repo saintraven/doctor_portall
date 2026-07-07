@@ -20,7 +20,7 @@ public class Doctor {
     private String speciality;
     @Column(nullable = false)
     private int experiencedYears;
-    // добавлено для работы миграции: тип Number заменён на BigDecimal, иначе Hibernate не маппит колонку
+    // добавлено для работы миграции (поменял Number на BigDecimal, с Number hibernate падает)
     @Column(nullable = false)
     private BigDecimal pricePerVisit;
 

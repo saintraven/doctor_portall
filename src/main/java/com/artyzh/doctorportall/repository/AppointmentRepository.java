@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
-    // добавлено для работы миграции: исправлена опечатка (было "UUId, id" — не компилировалось)
+    // добавлено для работы миграции (была опечатка UUId, не компилилось)
     List<Appointment> findAppointmentById(UUID id);
 }

@@ -11,7 +11,7 @@ public class DoctorDto {
     private String fullName;
     private String speciality;
     private int experienceYears;
-    // добавлено для работы миграции: тип Number заменён на BigDecimal, в пару к сущности Doctor
+    // добавлено для работы миграции (BigDecimal как в Doctor)
     private BigDecimal pricePerVisit;
 
 }
