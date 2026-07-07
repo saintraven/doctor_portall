@@ -1,17 +1,16 @@
 package com.artyzh.doctorportall.service;
 
 import com.artyzh.doctorportall.model.Appointment;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
 import com.artyzh.doctorportall.model.Doctor;
 import com.artyzh.doctorportall.dto.DoctorDto;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,41 +51,29 @@ public class DoctorsService {
         return doctorRepository.save(doctor);
     }
 
-    @Transactional
+    // добавлено для работы миграции
     public void delete(UUID id) {
-        List<Doctor> doctors = doctorRepository.findByID(id);
-        doctorRepository.deleteAll(doctors);
-
         doctorRepository.deleteById(id);
-
-        File file = new File(uploadDir + id, ".jpg");
-        if (file.exists()) {
-            file.delete();
-        }
     }
 
-    public void uploadImage(UUID id, byte[] imageBytes) throws IOException {
+    // добавлено для работы миграции
+    public void saveImage(UUID id, byte[] image) throws IOException {
         Doctor doctor = getById(id);
-        File dir = new File(uploadDir);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        File file = new File(dir, id + ".jpg");
-        try (FileOutputStream fos = FileOutputStream(file)){
-            fos.write(imageBytes);
-        }
-
-        doctor.setImageUrl("/api/v1/doctors/" + id + "/image");
+        Path imageFile = Path.of("images", doctor.getId() + ".png");
+        Files.createDirectories(imageFile.getParent());
+        Files.write(imageFile, image);
+        doctor.setImageUrl(imageFile.toString());
         doctorRepository.save(doctor);
     }
 
+    // добавлено для работы миграции
     public byte[] getImage(UUID id) throws IOException {
-        File file = new File(uploadDir + id + ".jpg");
-        if (!file.exists()) {
+        Doctor doctor = getById(id);
+        if (doctor.getImageUrl() == null) {
             throw new RuntimeException("Image not found");
         }
-        return Files.readAllBytes(file.toPath());
+        return Files.readAllBytes(Path.of(doctor.getImageUrl()));
     }
+
 }
 

@@ -2,12 +2,15 @@ package com.artyzh.doctorportall.service;
 
 import com.artyzh.doctorportall.dto.AppointmentDto;
 import com.artyzh.doctorportall.model.Appointment;
+import com.artyzh.doctorportall.model.Doctor;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class AppointmentsService {
     private final DoctorsRepository doctorRepository;
     private final AppointmentsRepository appointmentRepository;
@@ -18,16 +21,19 @@ public class AppointmentsService {
     }
 
     public Appointment create(AppointmentDto dto) {
+        if (appointmentRepository.findAppointmentsByAppointmentDate(dto.getAppointmentDate()).size() != 0)
+            throw new RuntimeException("Time slot occupied");
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found"));
         Appointment appointment = new Appointment();
         appointment.setId(UUID.randomUUID());
-        appointment.setDoctor(doctorRepository.getById(dto.getDoctorId()));
+        appointment.setDoctor(doctor);
         appointment.setAppointmentDate(dto.getAppointmentDate());
         appointment.setPatientName(dto.getPatientName());
         appointment.setStatus(dto.getStatus());
         return appointment;
     }
 
-    public List<Appointment> getdAllById() {
+    public List<Appointment> getdAll() {
         return appointmentRepository.findAll();
     }
 
