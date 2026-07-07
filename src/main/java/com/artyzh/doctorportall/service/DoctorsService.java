@@ -1,24 +1,22 @@
-package service;
+package com.artyzh.doctorportall.service;
 
 import org.springframework.stereotype.Service;
-import repository.DoctorsRepository;
-import repository.AppointmentRepository;
-import model.Doctor;
-import dto.DoctorDto;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import com.artyzh.doctorportall.repository.DoctorsRepository;
+import com.artyzh.doctorportall.repository.AppointmentsRepository;
+import com.artyzh.doctorportall.model.Doctor;
+import com.artyzh.doctorportall.dto.DoctorDto;
+
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class DoctorsService {
     private final DoctorsRepository doctorRepository;
-    private final AppointmentRepository appointmentRepositroy;
+    private final AppointmentsRepository appointmentRepository;
 
-    public DoctorsService(DoctorsRepository doctorRepository, AppointmentRepository appointmentRepository) {
+    public DoctorsService(DoctorsRepository doctorRepository, AppointmentsRepository appointmentRepository) {
         this.doctorRepository = doctorRepository;
-        this.appointmentRepositroy = appointmentRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     public Doctor create(DoctorDto dto) {

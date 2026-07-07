@@ -1,4 +1,4 @@
-package dto;
+package com.artyzh.doctorportall.dto;
 
 import lombok.Getter;
 import lombok.Setter;
