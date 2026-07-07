@@ -21,7 +21,7 @@ public class AppointmentsService {
     }
 
     public Appointment create(AppointmentDto dto) {
-        if (appointmentRepository.findAppointmentsByAppointmentDate(dto.getAppointmentDate()).size() != 0)
+        if (!appointmentRepository.findAppointmentsByAppointmentDate(dto.getAppointmentDate()).isEmpty())
             throw new RuntimeException("Time slot occupied");
         Doctor doctor = doctorRepository.findById(dto.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found"));
         Appointment appointment = new Appointment();
@@ -46,8 +46,11 @@ public class AppointmentsService {
     }
 
     public Appointment update(UUID id, AppointmentDto dto) {
+        if (!appointmentRepository.findAppointmentsByAppointmentDate(dto.getAppointmentDate()).isEmpty())
+            throw new RuntimeException("Time slot occupied");
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found"));
         Appointment appointment = getById(id);
-        appointment.setDoctor(doctorRepository.getById(dto.getDoctorId()));
+        appointment.setDoctor(doctor);
         appointment.setAppointmentDate(dto.getAppointmentDate());
         appointment.setPatientName(dto.getPatientName());
         appointment.setStatus(dto.getStatus());

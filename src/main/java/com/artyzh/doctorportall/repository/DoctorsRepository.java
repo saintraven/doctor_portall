@@ -7,6 +7,4 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DoctorsRepository extends JpaRepository<Doctor, UUID> {
-
-    List<Doctor> getById(UUID id);
 }
