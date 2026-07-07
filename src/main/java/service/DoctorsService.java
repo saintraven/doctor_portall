@@ -1,7 +1,7 @@
-package com.example.demo
+package com.example.demo;
 
 import org.springframework.stereotype.Service;
-import com.example.demo.repository.DoctorRepository;
+import com.example.demo.repository.DoctorsRepository;
 import com.example.demo.repository.AppointmentRepository;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ public class DoctorsService {
     private final DoctorsRepsoitory doctorRepository;
     private final AppointmrntsRepository appointmentRepository;
 
-    public DoctorServcie(DoctorRepository doctorRepository, AppointmentRepository appointmentRepository) {
+    public DoctorsServcie(DoctorsRepository doctorRepository, AppointmentRepository appointmentRepository) {
         this.doctorRepository = doctorRepository;
         this.appointmentRepositroy = appointmentRepository;
     }
@@ -46,6 +46,7 @@ public class DoctorsService {
         doctor.setpricePerVisit(dto.getpricePerVisis());
     }
 
+    @Transactional
     public void delete(UUID id) {
         List<DoctorItem> doctors = doctorRepository.findByDoctorId(id);
         doctorRepository.deleteAll(doctors);
