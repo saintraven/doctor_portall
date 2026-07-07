@@ -1,6 +1,7 @@
 package com.artyzh.doctorportall.service;
 
 import com.artyzh.doctorportall.model.Appointment;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
@@ -54,8 +55,8 @@ public class DoctorsService {
 
     @Transactional
     public void delete(UUID id) {
-        List<Doctor> doctors = doctorRepository.findById(id);
-        doctorRepository.deleteAll(doctors);
+        List<Appointment> appointments = appointmentRepository.getByDoctorId(id);
+        appointmentRepository.deleteAll(appointments);
 
         doctorRepository.deleteById(id);
 
@@ -73,7 +74,7 @@ public class DoctorsService {
         }
 
         File file = new File(dir, id + ".jpg");
-        try (FileOutputStream fos = FileOutputStream(file)){
+        try (FileOutputStream fos = new FileOutputStream(file)){
             fos.write(imageBytes);
         }
 
