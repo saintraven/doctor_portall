@@ -2,6 +2,7 @@ package com.artyzh.doctorportall.service;
 
 import com.artyzh.doctorportall.dto.DoctorDto;
 import com.artyzh.doctorportall.model.Doctor;
+import com.artyzh.doctorportall.repository.AppointmentRepository;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,11 @@ import java.util.UUID;
 @Service
 public class DoctorsService {
     private final DoctorsRepository doctorRepository;
-    private final AppointmentsRepository appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
 
     public DoctorsService(DoctorsRepository doctorRepository, AppointmentRepository appointmentRepository) {
         this.doctorRepository = doctorRepository;
-        this.appointmentRepositroy = appointmentRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     public Doctor create(DoctorDto dto) {
@@ -66,9 +67,8 @@ public class DoctorsService {
 
     public Doctor update(UUID, id, DoctorDto){
 
+
     }
-
-
 
 
 }
