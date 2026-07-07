@@ -25,6 +25,4 @@ public class Appointment {
     @Column(nullable = false)
     private Status status;
 
-    private String imageUrl;
-
 }
