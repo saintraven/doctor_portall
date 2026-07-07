@@ -54,12 +54,12 @@ public class DoctorsService {
 
     @Transactional
     public void delete(UUID id) {
-        List<DoctorItem> doctors = doctorRepository.findById(id);
+        List<Doctor> doctors = doctorRepository.findById(id);
         doctorRepository.deleteAll(doctors);
 
         doctorRepository.deleteById(id);
 
-        File file = new File(uploadDir + id ".jpg");
+        File file = new File(uploadDir + id, ".jpg");
         if (file.exists()) {
             file.delete();
         }
@@ -89,5 +89,4 @@ public class DoctorsService {
         return Files.readAllBytes(file.toPath());
     }
 }
-
 
