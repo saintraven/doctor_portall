@@ -54,7 +54,7 @@ public class DoctorsService {
 
     @Transactional
     public void delete(UUID id) {
-        List<Doctor> doctors = doctorRepository.findById(id);
+        List<Doctor> doctors = doctorRepository.findByID(id);
         doctorRepository.deleteAll(doctors);
 
         doctorRepository.deleteById(id);
