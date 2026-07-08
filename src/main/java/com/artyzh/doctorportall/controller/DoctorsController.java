@@ -48,7 +48,7 @@ public class DoctorsController {
 
     @DeleteMapping("/{doctor_id}")
     public ResponseEntity<Void> delete(@PathVariable("doctor_id") UUID id) {
-        doctorsService.delete(id); // TODO: check response status, 404 should be given, if not found
+        doctorsService.delete(id); // для исключений, 404 при отсутствии врача теперь откидывает GlobalExceptionHandler
         return ResponseEntity.noContent().build();
     }
 
