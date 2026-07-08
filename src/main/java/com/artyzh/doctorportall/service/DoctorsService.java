@@ -33,7 +33,7 @@ public class DoctorsService {
         doctor.setSpeciality(dto.getSpeciality());
         doctor.setExperiencedYears(dto.getExperienceYears());
         doctor.setPricePerVisit(dto.getPricePerVisit());
-        return doctor;
+        return doctorRepository.save(doctor);
     }
 
     public List<Doctor> getAll() {

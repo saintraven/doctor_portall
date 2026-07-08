@@ -30,7 +30,7 @@ public class AppointmentsService {
         appointment.setAppointmentDate(dto.getAppointmentDate());
         appointment.setPatientName(dto.getPatientName());
         appointment.setStatus(dto.getStatus());
-        return appointment;
+        return appointmentRepository.save(appointment);
     }
 
     public List<Appointment> getAll() {

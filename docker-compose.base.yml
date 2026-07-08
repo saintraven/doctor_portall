@@ -28,6 +28,8 @@ services:
 
   backend:
     build: .
+    ports:
+      - "8080:8080"
     restart: unless-stopped
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
