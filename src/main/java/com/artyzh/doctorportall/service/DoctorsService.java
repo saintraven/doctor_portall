@@ -54,6 +54,8 @@ public class DoctorsService {
 
     // добавлено для работы миграции
     public void delete(UUID id) {
+        // для исключений
+        getById(id);
         List<Appointment> appointments = appointmentRepository.getByDoctorId(id);
         appointmentRepository.deleteAll(appointments);
         doctorRepository.deleteById(id);

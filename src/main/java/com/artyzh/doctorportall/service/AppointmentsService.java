@@ -42,6 +42,8 @@ public class AppointmentsService {
     }
 
     public List<Appointment> getByDoctor(UUID doctorId) {
+        // для исключений
+        doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
         return appointmentRepository.getByDoctorId(doctorId);
     }
 
@@ -58,6 +60,8 @@ public class AppointmentsService {
     }
 
     public void delete(UUID id) {
+        // для исключений
+        getById(id);
         appointmentRepository.deleteById(id);
     }
 }
