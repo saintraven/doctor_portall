@@ -3,6 +3,7 @@ package com.artyzh.doctorportall.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -10,9 +11,9 @@ import java.util.UUID;
 public class AnalyticDto {
     private UUID doctorId;
     private String fullName;
-    private int totalAppointments;
+    private long totalAppointments;
     private Number utilizationPercentage;
-    private Number totalRevenue;
+    private BigDecimal totalRevenue;
     private Number noShowRatePercentage;
 
 }
