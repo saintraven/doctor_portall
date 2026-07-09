@@ -14,7 +14,9 @@ import java.util.UUID;
 public class Appointment {
     @Id
     private UUID id;
-    @ManyToOne(fetch = FetchType.EAGER)
+    // тюнинг под нагрузку: EAGER -> LAZY, чтобы врач не тянулся отдельным селектом везде,
+    // где он не нужен; на горячем GET он подгружается одним join'ом через @EntityGraph
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor", nullable = false)
     private Doctor doctor;
     @Column(nullable = false)

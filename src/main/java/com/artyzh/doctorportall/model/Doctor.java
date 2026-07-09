@@ -1,5 +1,6 @@
 package com.artyzh.doctorportall.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,9 @@ import java.util.UUID;
 @Table(name = "doctors")
 @Getter
 @Setter
+// тюнинг под нагрузку: после перевода doctor на LAZY Jackson иначе добавил бы
+// служебные поля hibernate-прокси в JSON — форма ответа обязана не измениться
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Doctor {
     @Id
     private UUID id;

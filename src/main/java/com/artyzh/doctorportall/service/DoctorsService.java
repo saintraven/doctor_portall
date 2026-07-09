@@ -1,8 +1,10 @@
 package com.artyzh.doctorportall.service;
 
 import com.artyzh.doctorportall.model.Appointment;
-import jakarta.transaction.Transactional;
+// тюнинг под нагрузку: jakarta.transaction.Transactional импортировался, но нигде не использовался;
+// читающие методы переведены на spring-овый @Transactional(readOnly = true)
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
 import com.artyzh.doctorportall.model.Doctor;
@@ -36,10 +38,12 @@ public class DoctorsService {
         return doctorRepository.save(doctor);
     }
 
+    @Transactional(readOnly = true)
     public List<Doctor> getAll() {
         return doctorRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Doctor getById(UUID doctorId) {
         return doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
     }

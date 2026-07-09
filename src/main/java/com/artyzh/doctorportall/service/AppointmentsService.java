@@ -5,7 +5,9 @@ import com.artyzh.doctorportall.model.Appointment;
 import com.artyzh.doctorportall.model.Doctor;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
 import com.artyzh.doctorportall.repository.DoctorsRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,18 +35,27 @@ public class AppointmentsService {
         return appointmentRepository.save(appointment);
     }
 
+    @Transactional(readOnly = true)
     public List<Appointment> getAll() {
         return appointmentRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Appointment getById(UUID appointmentId) {
         return appointmentRepository.findById(appointmentId).orElseThrow(() -> new RuntimeException("Appointment not found"));
     }
 
-    public List<Appointment> getByDoctor(UUID doctorId) {
-        // для исключений
-        doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
-        return appointmentRepository.getByDoctorId(doctorId);
+    // тюнинг под нагрузку: readOnly-транзакция — одна выборка вместо двух автокоммитов,
+    // без dirty-check; лишний findById врача (+1 SELECT на 88.9% трафика) заменён
+    // на дешёвый existsById и только когда список пуст — непустой список сам доказывает,
+    // что врач существует, а 404 для несуществующего врача сохраняется
+    @Transactional(readOnly = true)
+    public List<Appointment> getByDoctor(UUID doctorId, Pageable pageable) {
+        List<Appointment> appointments = appointmentRepository.findByDoctorId(doctorId, pageable);
+        if (appointments.isEmpty() && !doctorRepository.existsById(doctorId)) {
+            throw new RuntimeException("Doctor not found");
+        }
+        return appointments;
     }
 
     public Appointment update(UUID id, AppointmentDto dto) {

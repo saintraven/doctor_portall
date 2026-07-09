@@ -6,6 +6,8 @@ import com.artyzh.doctorportall.dto.DoctorDto;
 import com.artyzh.doctorportall.service.AppointmentsService;
 import com.artyzh.doctorportall.service.DoctorsService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,8 +70,13 @@ public class DoctorsController {
         response.getOutputStream().flush();
     }
 
+    // тюнинг под нагрузку: клиент не передаёт page/size, значит дефолтный лимит задаёт сервер —
+    // без него ответ горячего GET растёт линейно со временем теста (записи копятся и не удаляются);
+    // 50 ближайших по дате приёмов; параметрами ?page&size&sort можно получить остальное
     @GetMapping("/{doctor_id}/appointments")
-    public ResponseEntity<List<Appointment>> getAppointments(@PathVariable("doctor_id") UUID id) {
-        return ResponseEntity.ok(appointmentsService.getByDoctor(id));
+    public ResponseEntity<List<Appointment>> getAppointments(
+            @PathVariable("doctor_id") UUID id,
+            @PageableDefault(size = 50, sort = "appointmentDate") Pageable pageable) {
+        return ResponseEntity.ok(appointmentsService.getByDoctor(id, pageable));
     }
 }

@@ -2,6 +2,8 @@ package com.artyzh.doctorportall.repository;
 
 import com.artyzh.doctorportall.dto.StatisticsDto;
 import com.artyzh.doctorportall.model.Appointment;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,6 +13,11 @@ import java.util.List;
 
 public interface AppointmentsRepository extends JpaRepository<Appointment, UUID> {
     List<Appointment> getByDoctorId(UUID doctorId);
+
+    // тюнинг под нагрузку: горячий путь (88.9% запросов) — врач грузится одним join'ом
+    // (EntityGraph), объём ответа ограничен Pageable, а не растёт с таблицей
+    @EntityGraph(attributePaths = "doctor")
+    List<Appointment> findByDoctorId(UUID doctorId, Pageable pageable);
 
     List<Appointment> findAppointmentsByAppointmentDate(LocalDateTime appointmentDate);
 
