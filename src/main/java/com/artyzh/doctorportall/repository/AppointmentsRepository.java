@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.List;
 
@@ -19,14 +18,14 @@ public interface AppointmentsRepository extends JpaRepository<Appointment, UUID>
     @EntityGraph(attributePaths = "doctor")
     List<Appointment> findByDoctorId(UUID doctorId, Pageable pageable);
 
-    List<Appointment> findAppointmentsByAppointmentDate(LocalDateTime appointmentDate);
-
+    // тюнинг под нагрузку: sum(case when ... end) без else даёт NULL, а не 0, у врача
+    // без завершённых приёмов — totalRevenue приходил null; coalesce возвращает 0
     @Query(value = """
     select
         d.id as doctorId,
         d.full_name as fullName,
         count(a.id) as totalAppointments,
-        sum(case when a.status='completed' then 1 end) * d.price_per_visit as totalRevenue,
+        coalesce(sum(case when a.status='completed' then 1 end) * d.price_per_visit, 0) as totalRevenue,
         count(case when a.status='no_show' then 1 end) as totalNoShow
     from doctors d
     left join appointments a on d.id = a.doctor

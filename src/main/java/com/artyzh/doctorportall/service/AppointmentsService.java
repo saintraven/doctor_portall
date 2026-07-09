@@ -1,6 +1,7 @@
 package com.artyzh.doctorportall.service;
 
 import com.artyzh.doctorportall.dto.AppointmentDto;
+import com.artyzh.doctorportall.exception.NotFoundException;
 import com.artyzh.doctorportall.model.Appointment;
 import com.artyzh.doctorportall.model.Doctor;
 import com.artyzh.doctorportall.repository.AppointmentsRepository;
@@ -22,10 +23,16 @@ public class AppointmentsService {
         this.appointmentRepository = appointmentRepository;
     }
 
+    // тюнинг под нагрузку: проверка "слот занят" была (а) глобальной по всем врачам —
+    // два разных врача не могли принимать в одну секунду, (б) check-then-act селектом,
+    // который под конкурентной нагрузкой всё равно не гарантирует инвариант,
+    // (в) материализовала список сущностей (с EAGER-врачом) ради isEmpty().
+    // Теперь инвариант держит уникальный индекс uq_appointments_doctor_slot,
+    // нарушение ловится в GlobalExceptionHandler как 409. findById врача остаётся:
+    // он же нужен для сериализации ответа (вложенный doctor)
     public Appointment create(AppointmentDto dto) {
-        if (!appointmentRepository.findAppointmentsByAppointmentDate(dto.getAppointmentDate()).isEmpty())
-            throw new RuntimeException("Time slot occupied");
-        Doctor doctor = doctorRepository.findById(dto.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found"));
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId())
+                .orElseThrow(() -> new NotFoundException("Doctor not found"));
         Appointment appointment = new Appointment();
         appointment.setId(UUID.randomUUID());
         appointment.setDoctor(doctor);
@@ -42,7 +49,7 @@ public class AppointmentsService {
 
     @Transactional(readOnly = true)
     public Appointment getById(UUID appointmentId) {
-        return appointmentRepository.findById(appointmentId).orElseThrow(() -> new RuntimeException("Appointment not found"));
+        return appointmentRepository.findById(appointmentId).orElseThrow(() -> new NotFoundException("Appointment not found"));
     }
 
     // тюнинг под нагрузку: readOnly-транзакция — одна выборка вместо двух автокоммитов,
@@ -53,15 +60,15 @@ public class AppointmentsService {
     public List<Appointment> getByDoctor(UUID doctorId, Pageable pageable) {
         List<Appointment> appointments = appointmentRepository.findByDoctorId(doctorId, pageable);
         if (appointments.isEmpty() && !doctorRepository.existsById(doctorId)) {
-            throw new RuntimeException("Doctor not found");
+            throw new NotFoundException("Doctor not found");
         }
         return appointments;
     }
 
+    // тюнинг под нагрузку: та же замена check-then-act на уникальный индекс, что и в create
     public Appointment update(UUID id, AppointmentDto dto) {
-        if (!appointmentRepository.findAppointmentsByAppointmentDate(dto.getAppointmentDate()).isEmpty())
-            throw new RuntimeException("Time slot occupied");
-        Doctor doctor = doctorRepository.findById(dto.getDoctorId()).orElseThrow(() -> new RuntimeException("Doctor not found"));
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId())
+                .orElseThrow(() -> new NotFoundException("Doctor not found"));
         Appointment appointment = getById(id);
         appointment.setDoctor(doctor);
         appointment.setAppointmentDate(dto.getAppointmentDate());

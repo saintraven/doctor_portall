@@ -18,7 +18,9 @@ public class AnalyticsController {
         this.analyticsService = analyticsService;
     }
 
-    @GetMapping
+    // тюнинг под нагрузку: алиас /summary добавлен, не ломая существующий путь —
+    // два из трёх шаблонов нагрузочных скриптов ожидают /api/v1/analytics/summary
+    @GetMapping({"", "/summary"})
     public ResponseEntity<List<AnalyticDto>> getAll() {
         return ResponseEntity.ok(analyticsService.getAnalytics());
     }
