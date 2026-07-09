@@ -49,7 +49,7 @@ public class DoctorsController {
     }
 
     @DeleteMapping("/{doctor_id}")
-    public ResponseEntity<Void> delete(@PathVariable("doctor_id") UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable("doctor_id") UUID id) throws IOException {
         doctorsService.delete(id); // для исключений, 404 при отсутствии врача теперь откидывает GlobalExceptionHandler
         return ResponseEntity.noContent().build();
     }

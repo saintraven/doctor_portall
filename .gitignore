@@ -38,3 +38,6 @@ out/
 
 ### Creds ###
 *.env
+### Load-test artifacts: images write to volume, not to repo ###
+uploads/
+images/

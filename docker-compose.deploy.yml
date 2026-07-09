@@ -29,13 +29,17 @@ services:
   backend:
     build: .
     restart: unless-stopped
+    # тюнинг под нагрузку: приложение и healthcheck слушают 8080, публиковался же 8081 —
+    # снаружи стенд был недоступен
     ports:
-      - "8081:8081"
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-      JAVA_TOOL_OPTIONS: "-Xms2g -Xmx2g -XX:+UseG1GC -XX:MaxGCPauseMillis=100"
+      # тюнинг под нагрузку: -Xms2g/-Xmx2g при лимите контейнера 512M гарантировали
+      # OOM-kill; куча задаётся через MaxRAMPercentage в Dockerfile
+      JAVA_TOOL_OPTIONS: "-XX:+UseG1GC -XX:MaxGCPauseMillis=100"
     depends_on:
       db:
         condition: service_healthy

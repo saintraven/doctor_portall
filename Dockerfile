@@ -22,6 +22,8 @@ COPY --from=build /app/build/libs/*.jar app.jar
 
 USER appuser
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# тюнинг под нагрузку: без MaxRAMPercentage дефолтная куча в контейнере = 1/4 RAM,
+# при лимите 512M это 128M; 75% отдаёт ~384M куче и оставляет запас метаспейсу/стекам
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
 
 
