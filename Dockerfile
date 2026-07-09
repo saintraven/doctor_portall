@@ -1,4 +1,5 @@
-FROM gradle:9.5.1-jdk17-alpine AS build
+# тюнинг под нагрузку: JDK 17 -> 21
+FROM gradle:9.5.1-jdk21-alpine AS build
 WORKDIR /app
 
 COPY build.gradle.kts settings.gradle.kts ./
@@ -10,7 +11,8 @@ RUN chmod +x ./gradlew && ./gradlew dependencies --no-daemon
 COPY src ./src
 RUN gradle bootJar --no-daemon
 
-FROM eclipse-temurin:17-jre-focal
+# тюнинг под нагрузку: JDK 17 -> 21 (для 21 нет focal-тега, дефолтный 21-jre)
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 appgroup && \

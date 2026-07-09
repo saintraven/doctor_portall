@@ -9,7 +9,8 @@ version = "0.0.1-SNAPSHOT"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+		// тюнинг под нагрузку: JDK 17 -> 21 (в связке с образами в Dockerfile)
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
