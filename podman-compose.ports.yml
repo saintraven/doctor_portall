@@ -2,6 +2,8 @@ version: '3.8'
 
 services:
   db:
+    ports:
+      - "5433:5432"
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
@@ -35,6 +37,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
     depends_on:
       db:
         condition: service_healthy
@@ -57,6 +60,52 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  nginx:
+    image: jc21/nginx-proxy-manager:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.5"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  db-backup:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backups:/backups
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    entrypoint: >
+      sh -c "while true; do
+        PGPASSWORD=$$POSTGRES_PASSWORD pg_dump -h db -U postgres postgres |
+        gzip > /backups/backup_$$(date +%Y%m%d_%H%M%S).sql.gz;
+        find /backups -mtime +7 -delete;
+        sleep 86400;
+      done"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.2"
 
 volumes:
   pgdata:
