@@ -38,3 +38,5 @@ out/
 
 ### Creds ###
 *.env
+
+__pycache__/

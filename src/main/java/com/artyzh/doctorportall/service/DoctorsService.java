@@ -9,6 +9,7 @@ import com.artyzh.doctorportall.model.Doctor;
 import com.artyzh.doctorportall.dto.DoctorDto;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -69,20 +70,25 @@ public class DoctorsService {
     // добавлено для работы миграции
     public void uploadImage(UUID id, byte[] image) throws IOException {
         Doctor doctor = getById(id);
-        Path imageFile = Path.of("images", doctor.getId() + ".png");
-        Files.createDirectories(imageFile.getParent());
-        Files.write(imageFile, image);
-        doctor.setImageUrl(imageFile.toString());
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        File file = new File(dir, id + ".jpg");
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            fos.write(image);
+        }
+        doctor.setImageUrl("/api/v1/categories/" + id + "/image");
         doctorRepository.save(doctor);
     }
 
     // добавлено для работы миграции
     public byte[] getImage(UUID id) throws IOException {
-        Doctor doctor = getById(id);
-        if (doctor.getImageUrl() == null) {
+        File file = new File(uploadDir + id + ".jpg");
+        if (!file.exists()) {
             throw new RuntimeException("Image not found");
         }
-        return Files.readAllBytes(Path.of(doctor.getImageUrl()));
+        return Files.readAllBytes(file.toPath());
     }
 
 }
